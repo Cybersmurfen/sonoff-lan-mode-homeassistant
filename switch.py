@@ -5,12 +5,17 @@ when these devices are in "LAN Mode", directly over the local network.
 
 For more details about this platform, please refer to the documentation at
 https://github.com/beveradb/sonoff-lan-mode-homeassistant
+forked from beveradb/sonoff-lan-mode-homeassistant to match HA 0.110 and below
+Enjoy! /Cybersmurfen
 """
 import logging
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from homeassistant.components.switch import (SwitchDevice, PLATFORM_SCHEMA)
+try:
+    from homeassistant.components.switch import (SwitchDevice, PLATFORM_SCHEMA)
+except ImportError:
+    from homeassistant.components.switch import (SwitchEntity as SwitchDevice, PLATFORM_SCHEMA)
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_ICON
 
 REQUIREMENTS = ['pysonofflan>=0.3.0']
@@ -85,12 +90,12 @@ class HassSonoffSwitch(SwitchDevice):
         _LOGGER.debug("HassSonoffSwitch returning _state: %s" % self._state)
         return self._state
 
-    async def turn_on(self, **kwargs):
+    async def async_turn_on(self, **kwargs):
         """Turn the switch on."""
         _LOGGER.info("Sonoff LAN Mode switch %s switching on" % self._name)
         await self._sonoff_device.turn_on()
 
-    async def turn_off(self, **kwargs):
+    async def async_turn_off(self, **kwargs):
         """Turn the switch off."""
         _LOGGER.info("Sonoff LAN Mode switch %s switching off" % self._name)
         await self._sonoff_device.turn_off()
